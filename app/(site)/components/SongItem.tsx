@@ -1,5 +1,8 @@
-"use client"
+// components/SongItem.tsx
 
+"use client";
+
+import React from "react";
 import PlayButton from "@/components/PlayButton";
 import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
@@ -7,33 +10,64 @@ import Image from "next/image";
 
 interface SongItemProps {
     data: Song;
-    onClick: (id: string) => void
+    onClick: (id: string) => void;
+    viewMode: 'list' | 'tile';
 }
 
 const SongItem: React.FC<SongItemProps> = ({
     data,
-    onClick
+    onClick,
+    viewMode
 }) => {
-
     const imagePath = useLoadImage(data);
-    return(
-        <div onClick={() => onClick(data.id)} className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3">
-            <div className="relative aspect-square w-full h-full rounded-md overflow-hidden">
-                <Image className="object-cover" src={imagePath || '/images/liked.png'} fill alt="Image"/>
+
+    return (
+        <div
+            onClick={() => onClick(data.id)}
+            className={`relative cursor-pointer transition-all duration-300 ease-in-out ${
+                viewMode === 'list'
+                    ? 'flex items-center p-4 rounded-lg shadow-sm hover:bg-neutral-800 hover:scale-102'
+                    : 'group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3'
+            }`}
+        >
+            <div
+                className={`relative ${viewMode === 'list' ? 'w-16 h-16' : 'aspect-square w-full h-full'} ${
+                    viewMode === 'list' ? 'flex-shrink-0 mr-4' : ''
+                }`}
+            >
+                <Image
+                    className={`object-cover ${viewMode === 'tile' ? 'rounded-md' : 'rounded-lg'}`}
+                    src={imagePath || '/images/liked.png'}
+                    fill
+                    alt="Song Image"
+                />
             </div>
-            <div className="flex flex-col items-start w-full pt-4 gap-y-1">
-                <p className="font-semibold truncate w-full">
-                  {data.title}  
+            <div
+                className={`flex-grow ${viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''}`}
+            >
+                <p
+                    className={`text-white font-semibold truncate ${viewMode === 'tile' ? 'w-full' : ''}`}
+                >
+                    {data.title}
                 </p>
-                <p className="text-neutral-400 text-sm pb-4 w-full truncate">
+                <p
+                    className={`text-neutral-400 text-sm truncate ${viewMode === 'tile' ? 'pb-4 w-full' : ''}`}
+                >
                     By {data.author}
                 </p>
             </div>
-            <div className="absolute bottom-24 right-5">
-                <PlayButton/>
-            </div>
+            {viewMode === 'tile' && (
+                <div className="absolute bottom-4 right-4">
+                    {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> */}
+                </div>
+            )}
+            {viewMode === 'list' && (
+                <div className="flex-shrink-0 ml-4">
+                    {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> */}
+                </div>
+            )}
         </div>
-    )
-}
+    );
+};
 
 export default SongItem;
