@@ -13,13 +13,10 @@ import { twMerge } from "tailwind-merge";
 
 interface SidebarProps {
     children: React.ReactNode;
-    songs: Song[]
+    songs: Song[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-    children,
-    songs
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
     const pathname = usePathname();
     const player = usePlayer();
 
@@ -36,11 +33,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             active: pathname === '/search',
             href: '/search',
         }
-    ], []);
+    ], [pathname]); // Add pathname to dependency array
+
     return (
         <div className={twMerge(`
-        flex
-        h-full
+            flex
+            h-full
         `,
         player.activeId && "h-[calc(100%-80px)]"
         )}>
@@ -53,7 +51,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 {...item}
                             />
                         ))}
-
                     </div>
                 </Box>
                 <Box className="overflow-y-auto h-full">
@@ -67,4 +64,4 @@ const Sidebar: React.FC<SidebarProps> = ({
     );
 }
 
-export default Sidebar
+export default Sidebar;
