@@ -10,14 +10,12 @@ interface SongItemProps {
     data: Song;
     onClick: (id: string) => void;
     viewMode: 'list' | 'tile';
-    lyrics_path: string;
 }
 
 const SongItem: React.FC<SongItemProps> = ({
     data,
     onClick,
     viewMode,
-    lyrics_path
 }) => {
     const imagePath = useLoadImage(data);
 

@@ -1,13 +1,8 @@
-// components/PageContent.tsx
-
-"use client";
-
 import { useState } from "react";
 import { Song } from "@/types";
 import SongItem from "./SongItem";
 import ViewToggle from "@/components/ViewToggle";
 import useOnPlay from "@/hooks/useOnPlay";
-
 
 interface PageContentProps {
     songs: Song[];
@@ -36,7 +31,7 @@ const PageContent: React.FC<PageContentProps> = ({ songs }) => {
                         <SongItem
                             key={item.id}
                             data={item}
-                            onClick={(id: string) => onPlay(id)} // Update as needed
+                            onClick={(id: string) => onPlay(id)}
                             viewMode={viewMode}
                         />
                     ))
