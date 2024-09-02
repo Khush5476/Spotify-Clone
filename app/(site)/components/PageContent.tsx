@@ -8,6 +8,7 @@ import SongItem from "./SongItem";
 import ViewToggle from "@/components/ViewToggle";
 import useOnPlay from "@/hooks/useOnPlay";
 
+
 interface PageContentProps {
     songs: Song[];
 }
