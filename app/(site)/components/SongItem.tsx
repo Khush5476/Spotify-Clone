@@ -1,5 +1,3 @@
-// components/SongItem.tsx
-
 "use client";
 
 import React from "react";
@@ -7,6 +5,7 @@ import PlayButton from "@/components/PlayButton";
 import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
 import Image from "next/image";
+import LikeButton from "@/components/LikeButton";
 
 interface SongItemProps {
     data: Song;
@@ -46,7 +45,7 @@ const SongItem: React.FC<SongItemProps> = ({
                 className={`flex-grow ${viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''}`}
             >
                 <p
-                    className={`text-white font-semibold truncate ${viewMode === 'tile' ? 'w-full' : ''}`}
+                    className={`text-white font-semibold truncate text-[11.5px] lg:text-[23px]  md:text-[17px] ${viewMode === 'tile' ? 'w-full' : ''}`}
                 >
                     {data.title}
                 </p>
@@ -54,17 +53,25 @@ const SongItem: React.FC<SongItemProps> = ({
                     className={`text-neutral-400 text-sm truncate ${viewMode === 'tile' ? 'pb-4 w-full' : ''}`}
                 >
                     By {data.author}
+                    
                 </p>
             </div>
+            <div className={`absolute ${viewMode === 'tile' ? 'bottom-4 right-4' : 'ml-4'}`}>
+            
+            </div>
+            
             {viewMode === 'tile' && (
                 <div className="absolute bottom-4 right-4">
                     {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> */}
+                    <LikeButton songId={data.id}/>
                 </div>
             )}
             {viewMode === 'list' && (
                 <div className="flex-shrink-0 ml-4">
-                    {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> */}
+                    {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> \*/}
+                    <LikeButton songId={data.id}/>
                 </div>
+                
             )}
         </div>
     );

@@ -1,5 +1,3 @@
-"use client";
-
 import { Song } from "@/types";
 import MediaItem from "./MediaItem";
 import LikeButton from "./LikeButton";
@@ -10,10 +8,12 @@ import Slider from "./Slider";
 import usePlayer from "@/hooks/usePlayer";
 import { useEffect, useState } from "react";
 import useSound from "use-sound";
+import { parseBlob } from 'music-metadata-browser';
+import useLoadSongUrl from "@/hooks/useLoadSongUrl"; // Import the hook
 
 interface PlayerContentProps {
-    song: Song;
-    songUrl: string;
+    song: Song; 
+    songUrl: string; // Pass the song URL directly
     min?: number;
     max?: number;
 }
@@ -24,59 +24,52 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const Icon = isPlaying ? BsPauseFill : BsPlayFill;
-    const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+    const [songUrl1, setSongUrl1] = useState<string>('');
 
-    // Function to play the next song
-    const onPlayNext = () => {
-        if (player.ids.length === 0) {
-            return;
+    const loadSongUrl = useLoadSongUrl(song);
+
+    useEffect(() => {
+        if (loadSongUrl) {
+            setSongUrl1(loadSongUrl);
         }
+    }, [loadSongUrl]);
 
-        const currentIndex = player.ids.findIndex((id) => id === player.activeId);
-        const nextSong = player.ids[currentIndex + 1];
+    // Fetch song metadata to get duration
+    useEffect(() => {
+        if (!songUrl) return;
 
-        if (!nextSong) {
-            return player.setId(player.ids[0]);
-        }
+        const fetchSongMetadata = async () => {
+            try {
+                const response = await fetch(songUrl);
+                const blob = await response.blob();
+                const metadata = await parseBlob(blob);
 
-        player.setId(nextSong);
-    };
+                if (metadata.format && typeof metadata.format.duration === 'number') {
+                    setDuration(metadata.format.duration);
+                } else {
+                    console.error('Duration not found in metadata:', metadata);
+                }
+            } catch (error) {
+                console.error('Error fetching song metadata:', error);
+            }
+        };
 
-    // Function to play the previous song
-    const onPlayPrevious = () => {
-        if (player.ids.length === 0) {
-            return;
-        }
-
-        const currentIndex = player.ids.findIndex((id) => id === player.activeId);
-        const previousSong = player.ids[currentIndex - 1];
-
-        if (!previousSong) {
-            return player.setId(player.ids[player.ids.length - 1]);
-        }
-
-        player.setId(previousSong);
-    };
+        fetchSongMetadata();
+    }, [songUrl]);
 
     const [play, { pause, sound }] = useSound(songUrl, {
         volume: volume,
         onplay: () => {
             setIsPlaying(true);
-            setDuration(sound?.duration() || 0);
-            setCurrentTime(sound.seek());
+            if (sound) {
+                setCurrentTime(sound.seek() || 0);
+            }
         },
         onend: () => {
             setIsPlaying(false);
             onPlayNext();
         },
         onpause: () => setIsPlaying(false),
-        onload: () => {
-            if (sound) {
-                setDuration(sound.duration());
-                setCurrentTime(sound.seek());
-            }
-        },
         format: ['mp3']
     });
 
@@ -87,7 +80,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
 
         const updateInterval = setInterval(() => {
             if (sound) {
-                setCurrentTime(sound.seek());
+                setCurrentTime(sound.seek() || 0);
             }
         }, 1000);
 
@@ -106,13 +99,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
     };
 
     const toggleMute = () => {
-        setVolume((prevVolume) => (prevVolume === 0 ? 1 : 0));
+        setVolume(prevVolume => (prevVolume === 0 ? 1 : 0));
     };
 
     const handleSkipForward = () => {
         if (sound) {
             const skipAmount = 5; // seconds
-            const newTime = Math.max(currentTime + skipAmount, 0);
+            const newTime = Math.min(currentTime + skipAmount, duration);
             sound.seek(newTime);
             setCurrentTime(newTime);
         }
@@ -141,35 +134,61 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
         return `${minutes}:${seconds}`;
     };
 
-    const progress = duration ? (currentTime / duration) * 100 : 0;
+    const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+    const onPlayNext = () => {
+        if (player.ids.length === 0) return;
+
+        const currentIndex = player.ids.findIndex(id => id === player.activeId);
+        const nextSong = player.ids[currentIndex + 1];
+
+        if (!nextSong) return player.setId(player.ids[0]);
+
+        player.setId(nextSong);
+    };
+
+    const onPlayPrevious = () => {
+        if (player.ids.length === 0) return;
+
+        const currentIndex = player.ids.findIndex(id => id === player.activeId);
+        const previousSong = player.ids[currentIndex - 1];
+
+        if (!previousSong) return player.setId(player.ids[player.ids.length - 1]);
+
+        player.setId(previousSong);
+    };
+
+    const Icon = isPlaying ? BsPauseFill : BsPlayFill;
+    const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 h-full">
             {/* Left Section */}
-            <div className="flex w-full justify-start">
-                <div className="flex items-center gap-x-4">
+            <div className="flex justify-start text-[16px] md:text-lg min-h-[60px]">
+                <div className="flex items-center gap-x-4 ">
                     <MediaItem data={song} />
-                    <LikeButton songId={song.id} />
                 </div>
             </div>
 
             {/* Center Section for controls */}
-            <div className="flex flex-col md:flex-row md:col-span-1 md:justify-center items-center gap-x-6">
-                <div className="flex items-center gap-x-4">
-                    <button onClick={handleSkipBackward} className="text-white hover:text-gray-400">
-                        <AiFillStepBackward size={30} />
+            <div className="flex flex-col md:flex-row md:justify-center items-center gap-y-2 md:gap-x-4 md:mb-3 mt-8 sm:mt-0 mr-20 sm:mr-0">
+                <div className="flex items-center gap-x-2 md:gap-x-4">
+                    <button onClick={handleSkipBackward} className="text-white hover:text-gray-400 text-sm md:text-base lg:text-lg">
+                        <AiFillStepBackward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
                     </button>
-                    <button onClick={onPlayPrevious} className="text-neutral-400 cursor-pointer transition hover:text-white">
-                        <AiFillStepBackward size={30} />
+                    <button onClick={onPlayPrevious} className="text-neutral-400 cursor-pointer transition hover:text-white text-sm md:text-base lg:text-lg">
+                        <AiFillStepBackward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
                     </button>
-                    <div onClick={handlePlay} className="h-10 w-10 flex items-center justify-center rounded-full bg-white p-1 cursor-pointer">
-                        <Icon size={30} className="text-black" />
+                    
+                    <div onClick={handlePlay} className="h-7 w-7  lg:h-10 lg:w-10 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white text-black p-1 cursor-pointer">
+                        <Icon className="w-5 h-5 md:w-6 md:h-6 lg:w-14 lg:h-14" />
                     </div>
-                    <button onClick={onPlayNext} className="text-neutral-400 hover:text-white cursor-pointer transition">
-                        <AiFillStepForward size={30} />
+                    
+                    <button onClick={onPlayNext} className="text-neutral-400 hover:text-white cursor-pointer transition text-sm md:text-base lg:text-lg">
+                        <AiFillStepForward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
                     </button>
-                    <button onClick={handleSkipForward} className="text-white hover:text-gray-400">
-                        <AiFillStepForward size={30} />
+                    <button onClick={handleSkipForward} className="text-white hover:text-gray-400 text-sm md:text-base lg:text-lg">
+                        <AiFillStepForward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
                     </button>
                 </div>
             </div>
@@ -178,18 +197,31 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
             <div className="hidden md:flex md:col-span-1 w-full justify-end pr-4 items-center">
                 <div className="flex items-center w-full max-w-4xl">
                     <div className="flex items-center flex-grow mr-10">
-                        <span style={{ color: 'white' }}>{formatTime(currentTime)}</span>
+                    <span className="text-white">{formatTime(currentTime)}</span>
                         <div className="flex-grow mx-4">
-                            <Slider value={progress} onChange={handleSliderChange}  min={0} max={100} />
+                            <Slider 
+                                value={progress}
+                                onChange={handleSliderChange}
+                                min={min}
+                                max={max}
+                                isProgressBar={true}
+                            />
                         </div>
-                        <span style={{ color: 'white' }}>{formatTime(duration)}</span>
+                        <span className="text-white">{formatTime(duration)}</span>
                     </div>
                     <div className="flex items-center gap-x-2 ml-4">
                         <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={70} />
-                        <Slider value={volume * 100} onChange={(value) => setVolume(value / 100)} min={0} max={100} />
+                        <Slider 
+                            value={volume * 100}
+                            onChange={(value) => setVolume(value / 100)}
+                            min={0}
+                            max={100}
+                        />
                     </div>
                 </div>
+                
             </div>
+            
         </div>
     );
 };
