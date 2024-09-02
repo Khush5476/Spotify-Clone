@@ -9,11 +9,11 @@ import usePlayer from "@/hooks/usePlayer";
 import { useEffect, useState } from "react";
 import useSound from "use-sound";
 import { parseBlob } from 'music-metadata-browser';
-import useLoadSongUrl from "@/hooks/useLoadSongUrl"; // Import the hook
+import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 
 interface PlayerContentProps {
     song: Song; 
-    songUrl: string; // Pass the song URL directly
+    songUrl: string;
     min?: number;
     max?: number;
 }
@@ -34,7 +34,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
         }
     }, [loadSongUrl]);
 
-    // Fetch song metadata to get duration
     useEffect(() => {
         if (!songUrl) return;
 
@@ -44,7 +43,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                 const blob = await response.blob();
                 const metadata = await parseBlob(blob);
 
-                if (metadata.format && typeof metadata.format.duration === 'number') {
+                if (metadata.format?.duration) {
                     setDuration(metadata.format.duration);
                 } else {
                     console.error('Duration not found in metadata:', metadata);
@@ -58,7 +57,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
     }, [songUrl]);
 
     const [play, { pause, sound }] = useSound(songUrl, {
-        volume: volume,
+        volume,
         onplay: () => {
             setIsPlaying(true);
             if (sound) {
@@ -163,14 +162,12 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 h-full">
-            {/* Left Section */}
             <div className="flex justify-start text-[16px] md:text-lg min-h-[60px]">
-                <div className="flex items-center gap-x-4 ">
+                <div className="flex items-center gap-x-4">
                     <MediaItem data={song} />
                 </div>
             </div>
 
-            {/* Center Section for controls */}
             <div className="flex flex-col md:flex-row md:justify-center items-center gap-y-2 md:gap-x-4 md:mb-3 mt-8 sm:mt-0 mr-20 sm:mr-0">
                 <div className="flex items-center gap-x-2 md:gap-x-4">
                     <button onClick={handleSkipBackward} className="text-white hover:text-gray-400 text-sm md:text-base lg:text-lg">
@@ -180,7 +177,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                         <AiFillStepBackward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
                     </button>
                     
-                    <div onClick={handlePlay} className="h-7 w-7  lg:h-10 lg:w-10 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white text-black p-1 cursor-pointer">
+                    <div onClick={handlePlay} className="h-7 w-7 lg:h-10 lg:w-10 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white text-black p-1 cursor-pointer">
                         <Icon className="w-5 h-5 md:w-6 md:h-6 lg:w-14 lg:h-14" />
                     </div>
                     
@@ -193,11 +190,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                 </div>
             </div>
 
-            {/* Right Section for progress slider and volume control */}
-            <div className="hidden md:flex md:col-span-1 w-full justify-end pr-4 items-center">
+            <div className=" md:flex md:col-span-1 w-full justify-end pr-4 items-center">
                 <div className="flex items-center w-full max-w-4xl">
                     <div className="flex items-center flex-grow mr-10">
-                    <span className="text-white">{formatTime(currentTime)}</span>
+                        <span className="text-white">{formatTime(currentTime)}</span>
                         <div className="flex-grow mx-4">
                             <Slider 
                                 value={progress}
@@ -210,7 +206,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                         <span className="text-white">{formatTime(duration)}</span>
                     </div>
                     <div className="flex items-center gap-x-2 ml-4">
-                        <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={70} />
+                        <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={30} />
                         <Slider 
                             value={volume * 100}
                             onChange={(value) => setVolume(value / 100)}
@@ -219,9 +215,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                         />
                     </div>
                 </div>
-                
             </div>
-            
         </div>
     );
 };
