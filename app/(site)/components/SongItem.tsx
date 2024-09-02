@@ -45,7 +45,7 @@ const SongItem: React.FC<SongItemProps> = ({
                 className={`flex-grow ${viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''}`}
             >
                 <p
-                    className={`text-white font-semibold truncate text-[11.5px] lg:text-[23px]  md:text-[17px] ${viewMode === 'tile' ? 'w-full' : ''}`}
+                    className={`text-white font-semibold ${viewMode === 'list' ? 'text-[15px] md:text-[17px] lg:text-[23px] truncate max-w-[200px] md:max-w-[1000px] sm:whitespace-nowrap sm:overflow-ellipsis' : ''}`}
                 >
                     {data.title}
                 </p>
@@ -53,7 +53,6 @@ const SongItem: React.FC<SongItemProps> = ({
                     className={`text-neutral-400 text-sm truncate ${viewMode === 'tile' ? 'pb-4 w-full' : ''}`}
                 >
                     By {data.author}
-                    
                 </p>
             </div>
             <div className={`absolute ${viewMode === 'tile' ? 'bottom-4 right-4' : 'ml-4'}`}>
@@ -71,7 +70,6 @@ const SongItem: React.FC<SongItemProps> = ({
                     {/* <PlayButton className="text-white hover:text-gray-300 transition-colors duration-300" /> \*/}
                     <LikeButton songId={data.id}/>
                 </div>
-                
             )}
         </div>
     );

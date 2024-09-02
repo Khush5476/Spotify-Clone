@@ -1,6 +1,5 @@
 import { Song } from "@/types";
 import MediaItem from "./MediaItem";
-import LikeButton from "./LikeButton";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react";
 import useSound from "use-sound";
 import { parseBlob } from 'music-metadata-browser';
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
+import LikeButton from "./LikeButton";
 
 interface PlayerContentProps {
     song: Song; 
@@ -161,59 +161,62 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 h-full">
-            <div className="flex justify-start text-[16px] md:text-lg min-h-[60px]">
-                <div className="flex items-center gap-x-4">
-                    <MediaItem data={song} />
+        <div className="flex flex-col md:flex-row h-full p-2 md:p-4">
+            {/* Left Section */}
+            <div className="flex flex-col md:w-1/3 justify-center items-center md:items-start p-2 md:p-4 h-full">
+                <div className="flex items-center gap-2 md:gap-4">
+                    <div className="flex-grow overflow-hidden text-ellipsis whitespace-nowrap text-xs md:text-base">
+                        <MediaItem data={song} />
+                    </div>
+                    <LikeButton songId={song.id} />
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-center items-center gap-y-2 md:gap-x-4 md:mb-3 mt-8 sm:mt-0 mr-20 sm:mr-0">
-                <div className="flex items-center gap-x-2 md:gap-x-4">
-                    <button onClick={handleSkipBackward} className="text-white hover:text-gray-400 text-sm md:text-base lg:text-lg">
-                        <AiFillStepBackward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
+            {/* Center Section for controls */}
+            <div className="flex flex-col md:w-1/3 justify-center items-center p-2 md:p-4">
+                <div className="flex items-center gap-2 md:gap-4 mb-2">
+                    <button onClick={handleSkipBackward} className="text-white hover:text-gray-400 text-xs md:text-base">
+                        <AiFillStepBackward className="w-4 h-4 md:w-6 md:h-6" />
                     </button>
-                    <button onClick={onPlayPrevious} className="text-neutral-400 cursor-pointer transition hover:text-white text-sm md:text-base lg:text-lg">
-                        <AiFillStepBackward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
+                    <button onClick={onPlayPrevious} className="text-neutral-400 cursor-pointer transition hover:text-white text-xs md:text-base">
+                        <AiFillStepBackward className="w-4 h-4 md:w-6 md:h-6" />
                     </button>
                     
-                    <div onClick={handlePlay} className="h-7 w-7 lg:h-10 lg:w-10 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white text-black p-1 cursor-pointer">
-                        <Icon className="w-5 h-5 md:w-6 md:h-6 lg:w-14 lg:h-14" />
+                    <div onClick={handlePlay} className="h-8 w-8 md:h-11 md:w-11 flex items-center justify-center rounded-full bg-white text-black p-1 md:p-2 cursor-pointer">
+                        <Icon className="w-6 h-6 md:w-8 md:h-8" />
                     </div>
                     
-                    <button onClick={onPlayNext} className="text-neutral-400 hover:text-white cursor-pointer transition text-sm md:text-base lg:text-lg">
-                        <AiFillStepForward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
+                    <button onClick={onPlayNext} className="text-neutral-400 hover:text-white cursor-pointer transition text-xs md:text-base">
+                        <AiFillStepForward className="w-4 h-4 md:w-6 md:h-6" />
                     </button>
-                    <button onClick={handleSkipForward} className="text-white hover:text-gray-400 text-sm md:text-base lg:text-lg">
-                        <AiFillStepForward className="w-5 h-5 md:w-6 md:h-6 lg:w-10 lg:h-10" />
+                    <button onClick={handleSkipForward} className="text-white hover:text-gray-400 text-xs md:text-base">
+                        <AiFillStepForward className="w-4 h-4 md:w-6 md:h-6" />
                     </button>
                 </div>
-            </div>
-
-            <div className=" md:flex md:col-span-1 w-full justify-end pr-4 items-center">
-                <div className="flex items-center w-full max-w-4xl">
-                    <div className="flex items-center flex-grow mr-10">
-                        <span className="text-white">{formatTime(currentTime)}</span>
-                        <div className="flex-grow mx-4">
-                            <Slider 
-                                value={progress}
-                                onChange={handleSliderChange}
-                                min={min}
-                                max={max}
-                                isProgressBar={true}
-                            />
-                        </div>
-                        <span className="text-white">{formatTime(duration)}</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 ml-4">
-                        <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={30} />
+                <div className="flex items-center gap-2 md:gap-4 mx-2 w-full max-w-[500px]">
+                    <span className="text-white text-xs md:text-base">{formatTime(currentTime)}</span>
+                    <div className="flex-grow mx-2 md:mx-4">
                         <Slider 
-                            value={volume * 100}
-                            onChange={(value) => setVolume(value / 100)}
-                            min={0}
-                            max={100}
+                            value={progress}
+                            onChange={handleSliderChange}
+                            min={min}
+                            max={max}
                         />
                     </div>
+                    <span className="text-white text-xs md:text-base">{formatTime(duration)}</span>
+                </div>
+            </div>
+
+            {/* Right Section for volume control */}
+            <div className="flex flex-col md:w-1/3 justify-center items-center p-2 md:p-4">
+                <div className="flex items-center gap-2 md:gap-4 ml-auto w-full max-w-[300px]">
+                    <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40} />
+                    <Slider 
+                        value={volume * 100}
+                        onChange={(value) => setVolume(value / 100)}
+                        min={0}
+                        max={100}
+                    />
                 </div>
             </div>
         </div>
