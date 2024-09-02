@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import { Song } from "@/types";
 import SongItem from "./SongItem";
