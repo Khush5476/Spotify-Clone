@@ -7,6 +7,9 @@ export interface Song {
     title: string;
     song_path: string;
     image_path: string;
+    image: string;
+    song: string;
+    lyrics?: string; // Optional field for lyrics URL
 };
 
 export interface UserDetails {
