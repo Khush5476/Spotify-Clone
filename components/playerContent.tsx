@@ -14,9 +14,11 @@ import useSound from "use-sound";
 interface PlayerContentProps {
     song: Song;
     songUrl: string;
+    min?: number;
+    max?: number;
 }
 
-const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
+const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, max = 100 }) => {
     const player = usePlayer();
     const [volume, setVolume] = useState(1);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -178,7 +180,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
                     <div className="flex items-center flex-grow mr-10">
                         <span style={{ color: 'white' }}>{formatTime(currentTime)}</span>
                         <div className="flex-grow mx-4">
-                            <Slider value={progress} onChange={handleSliderChange} min={0} max={100} />
+                            <Slider value={progress} onChange={handleSliderChange}  min={0} max={100} />
                         </div>
                         <span style={{ color: 'white' }}>{formatTime(duration)}</span>
                     </div>
