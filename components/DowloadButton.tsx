@@ -33,10 +33,10 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ url }) => {
     return (
         <button
             onClick={handleDownload}
-            className="p-2 bg-gray-800 text-white rounded-full hover:bg-gray-600"
+            className="p-2 bg-gray-800 text-white rounded-full hover:bg-gray-600 flex items-center justify-center transition-transform duration-300 transform hover:scale-105"
             title="Download"
         >
-            <FiDownload size={20} />
+            <FiDownload size={20} className="md:w-5 md:h-5 h-3 w-3" />
         </button>
     );
 };

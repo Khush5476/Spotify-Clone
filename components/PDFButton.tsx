@@ -15,9 +15,9 @@ const PDFButton: React.FC<PDFButtonProps> = ({ url }) => {
     return (
         <Button 
             onClick={handleClick} 
-            className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-cyan-400 bg-cyan-500 transition-colors"
+            className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full hover:bg-cyan-400 bg-cyan-500 transition-colors"
         >
-            <FaFilePdf className="text-white" size={20} />
+            <FaFilePdf className="text-white text-sm md:text-base lg:text-lg" />
         </Button>
     );
 };

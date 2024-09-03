@@ -4,8 +4,8 @@ import LikeButton from "@/components/LikeButton";
 import MediaItem from "@/components/MediaItem";
 import useOnPlay from "@/hooks/useOnPlay";
 import { Song } from "@/types";
-import PDFButton from "./PDFButton"; // Ensure this component exists and is properly implemented
-import DownloadButton from "@/components/DowloadButton";// Ensure this component exists and is properly implemented
+import PDFButton from "@/components/PDFButton";
+import DownloadButton from "@/components/DowloadButton";
 
 interface SearchContentProps {
     songs: Song[];
@@ -35,8 +35,11 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs }) => {
 
                 return (
                     <div key={song.id} className="flex items-center gap-x-4 w-full relative group">
-                        <div className="flex-1">
-                            <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
+                        {/* Title Container */}
+                        <div className="flex-1 overflow-hidden">
+                            <div className="text-ellipsis whitespace-nowrap overflow-hidden text-[20px]">
+                                <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
+                            </div>
                         </div>
 
                         {/* Download Button */}

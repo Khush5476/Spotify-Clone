@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import MediaItem from "@/components/MediaItem";
 import useOnPlay from "@/hooks/useOnPlay";
@@ -7,7 +7,7 @@ import { Song } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import LikeButton from "@/components/LikeButton";
-import PDFButton from "./PDFButton";
+import PDFButton from "@/components/PDFButton";
 import DownloadButton from "@/components/DowloadButton";
 
 interface LikedContentProps {
@@ -46,8 +46,10 @@ const LikedContent: React.FC<LikedContentProps> = ({ songs }) => {
 
                 return (
                     <div key={song.id} className="flex items-center gap-x-4 w-full relative group">
-                        <div className="flex-1">
-                            <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
+                        <div className="flex-1 overflow-hidden">
+                            <div className="text-ellipsis whitespace-nowrap overflow-hidden">
+                                <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-x-2">
@@ -55,21 +57,19 @@ const LikedContent: React.FC<LikedContentProps> = ({ songs }) => {
                             {downloadURL && (
                                 <DownloadButton
                                     url={downloadURL}
-                                    />
+                                />
                             )}
 
                             {/* PDF Button */}
                             {lyricsURL && (
                                 <PDFButton 
                                     url={lyricsURL} 
-                                    
                                 />
                             )}
 
                             {/* Like Button */}
                             <LikeButton 
                                 songId={song.id} 
-                                
                             />
                         </div>
                     </div>

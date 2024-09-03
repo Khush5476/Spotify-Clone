@@ -167,7 +167,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
             {/* Left Section */}
             <div className="flex flex-col md:w-1/3 justify-center items-center md:items-start p-2 md:p-4 h-full">
                 <div className="flex items-center gap-2 md:gap-4">
-                    <div className="flex-grow overflow-hidden text-ellipsis whitespace-nowrap text-xs md:text-base">
+                    <div className="flex-grow overflow-hidden text-ellipsis whitespace-nowrap md:text-base text-sm max-w-[300px]">
                         <MediaItem data={song} />
                     </div>
                     <LikeButton songId={song.id} />

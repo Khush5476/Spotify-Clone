@@ -5,7 +5,7 @@ import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
 import Image from "next/image";
 import LikeButton from "@/components/LikeButton";
-import PDFButton from "@/app/liked/components/PDFButton";
+import PDFButton from "@/components/PDFButton";
 import DownloadButton from "@/components/DowloadButton";
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 
@@ -55,13 +55,13 @@ const SongItem: React.FC<SongItemProps> = ({
             <div
                 className={`flex-grow ${
                     viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''
-                } ${viewMode === 'list' ? 'flex-grow flex flex-col justify-between max-w-[175px] md:max-w-[1000px]' : ''}`}
+                } ${viewMode === 'list' ? 'flex-grow flex flex-col justify-between max-w-[165px] md:max-w-[1000px]' : ''}`}
             >
                 <p
                     className={`text-white font-semibold ${
                         viewMode === 'tile'
                             ? 'text-[15px] md:text-[17px] lg:text-[20px] overflow-hidden max-w-[160px] whitespace-nowrap text-ellipsis'
-                            : 'text-[15px] md:text-[17px] lg:text-[23px] truncate'
+                            : 'text-[12px] md:text-[17px] lg:text-[23px] truncate'
                     }`}
                 >
                     {data.title}
