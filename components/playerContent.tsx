@@ -10,6 +10,7 @@ import useSound from "use-sound";
 import { parseBlob } from 'music-metadata-browser';
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 import LikeButton from "./LikeButton";
+import PDFButton from "./PDFButton";
 
 interface PlayerContentProps {
     song: Song; 
@@ -169,6 +170,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                         <MediaItem data={song} />
                     </div>
                     <LikeButton songId={song.id} />
+                    {song.lyrics_path && (
+                        <PDFButton url={`https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/lyrics/${song.lyrics_path}`} />
+                    )}
                 </div>
             </div>
 

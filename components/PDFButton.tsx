@@ -1,7 +1,7 @@
 // components/PDFButton.tsx
 
 import { FaFilePdf } from "react-icons/fa";
-import Button from "@/components/Button";
+import Button from "./Button";
 
 interface PDFButtonProps {
     url: string;

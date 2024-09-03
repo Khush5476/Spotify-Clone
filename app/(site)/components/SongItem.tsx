@@ -6,6 +6,7 @@ import { Song } from "@/types";
 import Image from "next/image";
 import LikeButton from "@/components/LikeButton";
 import PDFButton from "@/app/liked/components/PDFButton";
+
 interface SongItemProps {
     data: Song;
     onClick: (id: string) => void;
@@ -49,10 +50,16 @@ const SongItem: React.FC<SongItemProps> = ({
                 />
             </div>
             <div
-                className={`flex-grow ${viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''}`}
+                className={`flex-grow ${
+                    viewMode === 'tile' ? 'flex flex-col items-start pt-4 gap-y-1 w-full' : ''
+                } ${viewMode === 'list' ? 'flex-grow flex flex-col justify-between max-w-[175px] md:max-w-[1000px]' : ''}`}
             >
                 <p
-                    className={`text-white font-semibold ${viewMode === 'list' ? 'text-[15px] md:text-[17px] lg:text-[23px] truncate max-w-[200px] md:max-w-[1000px] sm:whitespace-nowrap sm:overflow-ellipsis' : ''}`}
+                    className={`text-white font-semibold ${
+                        viewMode === 'tile'
+                            ? 'text-[15px] md:text-[17px] lg:text-[20px] overflow-hidden max-w-[160px] whitespace-nowrap text-ellipsis'
+                            : 'text-[15px] md:text-[17px] lg:text-[23px] truncate'
+                    }`}
                 >
                     {data.title}
                 </p>
@@ -62,10 +69,6 @@ const SongItem: React.FC<SongItemProps> = ({
                     By {data.author}
                 </p>
             </div>
-            <div className={`absolute ${viewMode === 'tile' ? 'bottom-4 right-4' : 'ml-4'}`}>
-
-            </div>
-            
             {viewMode === 'tile' && (
                 <div className="absolute bottom-4 right-4 flex gap-2">
                     {lyricsURL && (
@@ -75,7 +78,7 @@ const SongItem: React.FC<SongItemProps> = ({
                 </div>
             )}
             {viewMode === 'list' && (
-                <div className="flex-shrink-0 ml-4 flex gap-2">
+                <div className="flex-shrink-0 flex gap-2 ml-auto">
                     {lyricsURL && (
                         <PDFButton url={lyricsURL} />
                     )}
