@@ -6,6 +6,8 @@ import { Song } from "@/types";
 import Image from "next/image";
 import LikeButton from "@/components/LikeButton";
 import PDFButton from "@/app/liked/components/PDFButton";
+import DownloadButton from "@/components/DowloadButton";
+import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 
 interface SongItemProps {
     data: Song;
@@ -19,6 +21,7 @@ const SongItem: React.FC<SongItemProps> = ({
     viewMode,
 }) => {
     const imagePath = useLoadImage(data);
+    const songUrl = useLoadSongUrl(data);
 
     // Construct the URL for the lyrics based on the song data
     const lyricsURL = data.lyrics_path ? `https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/lyrics/${data.lyrics_path}` : '';
@@ -33,7 +36,7 @@ const SongItem: React.FC<SongItemProps> = ({
             onClick={handleClick}
             className={`relative cursor-pointer transition-all duration-300 ease-in-out ${
                 viewMode === 'list'
-                    ? 'flex items-center p-4 rounded-lg shadow-sm hover:bg-neutral-800 hover:scale-102'
+                    ? 'flex items-center p-4 rounded-lg shadow-sm hover:bg-neutral-800 hover:scale-102 group'
                     : 'group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3'
             }`}
         >
@@ -70,7 +73,12 @@ const SongItem: React.FC<SongItemProps> = ({
                 </p>
             </div>
             {viewMode === 'tile' && (
-                <div className="absolute bottom-4 right-4 flex gap-2">
+                <div className="absolute bottom-4 right-4 flex gap-2 opacity-100">
+                      <div className=" opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {songUrl && (
+                        <DownloadButton url={songUrl} />
+                    )}
+                    </div>
                     {lyricsURL && (
                         <PDFButton url={lyricsURL} />
                     )}
@@ -78,7 +86,12 @@ const SongItem: React.FC<SongItemProps> = ({
                 </div>
             )}
             {viewMode === 'list' && (
-                <div className="flex-shrink-0 flex gap-2 ml-auto">
+                <div className="flex-shrink-0 flex gap-2 ml-auto items-center">
+                      <div className=" opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {songUrl && (
+                        <DownloadButton url={songUrl} />
+                    )}
+                    </div>
                     {lyricsURL && (
                         <PDFButton url={lyricsURL} />
                     )}

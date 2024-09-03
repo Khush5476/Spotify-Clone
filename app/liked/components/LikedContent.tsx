@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import LikeButton from "@/components/LikeButton";
 import PDFButton from "./PDFButton";
+import DownloadButton from "@/components/DowloadButton";
+
 interface LikedContentProps {
     songs: Song[];
 }
 
-const LikedContent: React.FC<LikedContentProps> = ({
-    songs
-}) => {
+const LikedContent: React.FC<LikedContentProps> = ({ songs }) => {
     const onPlay = useOnPlay(songs);
     const router = useRouter();
     const { isLoading, user } = useUser();
@@ -40,15 +40,37 @@ const LikedContent: React.FC<LikedContentProps> = ({
                     ? `https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/lyrics/${song.lyrics_path}` 
                     : '';
 
+                const downloadURL = song.song_path
+                    ? `https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/songs/${song.song_path}`
+                    : '';
+
                 return (
-                    <div key={song.id} className="flex items-center gap-x-4 w-full">
+                    <div key={song.id} className="flex items-center gap-x-4 w-full relative group">
                         <div className="flex-1">
                             <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
                         </div>
+
                         <div className="flex items-center gap-x-2">
-                        {lyricsURL && <PDFButton url={lyricsURL} />}
-                            <LikeButton songId={song.id} />
-                            
+                            {/* Download Button */}
+                            {downloadURL && (
+                                <DownloadButton
+                                    url={downloadURL}
+                                    />
+                            )}
+
+                            {/* PDF Button */}
+                            {lyricsURL && (
+                                <PDFButton 
+                                    url={lyricsURL} 
+                                    
+                                />
+                            )}
+
+                            {/* Like Button */}
+                            <LikeButton 
+                                songId={song.id} 
+                                
+                            />
                         </div>
                     </div>
                 );

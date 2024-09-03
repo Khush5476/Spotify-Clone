@@ -11,6 +11,7 @@ import { parseBlob } from 'music-metadata-browser';
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 import LikeButton from "./LikeButton";
 import PDFButton from "./PDFButton";
+import DownloadButton from "./DowloadButton";
 
 interface PlayerContentProps {
     song: Song; 
@@ -173,6 +174,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                     {song.lyrics_path && (
                         <PDFButton url={`https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/lyrics/${song.lyrics_path}`} />
                     )}
+                                        {songUrl1 && (
+                        <DownloadButton url={songUrl1} />
+                    )}
+                    
                 </div>
             </div>
 
@@ -211,9 +216,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                 </div>
             </div>
 
-            {/* Right Section for volume control */}
+            {/* Right Section for volume control and Download button */}
             <div className="flex flex-col md:w-1/3 justify-center items-center p-2 md:p-4">
-                <div className="flex items-center gap-2 md:gap-4 ml-auto w-full max-w-[300px]">
+                <div className="flex items-center gap-2 md:gap-4 ml-auto w-full max-w-[300px] relative group">
                     <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40} />
                     <Slider 
                         value={volume * 100}
@@ -221,6 +226,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                         min={0}
                         max={100}
                     />
+                    {/* Download button */}
                 </div>
             </div>
         </div>
