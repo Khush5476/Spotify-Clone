@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
             flex
             h-full
         `,
-        player.activeId && "h-[calc(100%-80px)]"
+        player.activeId && "h-[calc(100%-190px)] md:h-[calc(100%-120px)] "
         )}>
             <div className="hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2">
                 <Box>
