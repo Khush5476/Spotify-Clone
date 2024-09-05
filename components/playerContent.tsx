@@ -162,6 +162,60 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
     const Icon = isPlaying ? BsPauseFill : BsPlayFill;
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
+    // Handle spacebar key press
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code === 'Space') {
+                event.preventDefault(); // Prevent default spacebar scroll behavior
+                handlePlay(); // Toggle play/pause
+            }
+        };
+
+        
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isPlaying, handlePlay]);
+
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code === 'ArrowRight') {
+                event.preventDefault(); // Prevent default spacebar scroll behavior
+                handleSkipForward(); // Toggle play/pause
+            }
+        };
+
+        
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [sound,  handleSkipForward]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code === 'ArrowLeft') {
+                event.preventDefault(); // Prevent default spacebar scroll behavior
+                handleSkipBackward(); // Toggle play/pause
+            }
+        };
+
+        
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [sound,  handleSkipBackward]);
+    
+
     return (
         <div className="flex flex-col md:flex-row h-full p-2 md:p-4">
             {/* Left Section */}
@@ -174,10 +228,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
                     {song.lyrics_path && (
                         <PDFButton url={`https://tztpwznenrpoajfsoyfm.supabase.co/storage/v1/object/public/lyrics/${song.lyrics_path}`} />
                     )}
-                                        {songUrl1 && (
+                    {songUrl1 && (
                         <DownloadButton url={songUrl1} />
                     )}
-                    
                 </div>
             </div>
 

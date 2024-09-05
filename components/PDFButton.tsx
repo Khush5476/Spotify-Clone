@@ -1,6 +1,8 @@
 // components/PDFButton.tsx
 
-import { FaFilePdf } from "react-icons/fa";
+import { FaAddressBook, FaFilePdf, FaMusic } from "react-icons/fa";
+import { MdQueueMusic } from "react-icons/md";
+
 import Button from "./Button";
 
 interface PDFButtonProps {
@@ -15,9 +17,9 @@ const PDFButton: React.FC<PDFButtonProps> = ({ url }) => {
     return (
         <Button 
             onClick={handleClick} 
-            className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full hover:bg-cyan-400 bg-cyan-500 transition-colors"
+            className="flex items-center justify-center rounded-full w-9 h-9 hover:bg-cyan-400 bg-cyan-500 transition-colors"
         >
-            <FaFilePdf className="text-white text-sm md:text-base lg:text-lg" />
+            <MdQueueMusic size={20} className="md:w-4 md:h-4 h-2 w-2 text-white"/>
         </Button>
     );
 };

@@ -33,7 +33,7 @@ const Library: React.FC<LibraryProps> = ({
                 <div className="inline-flex items-center gap-x-2">
                     <TbPlaylist size={26} className="text-neutral-400"/>
                     <p className="text-neutral-400 font-medium text-md">
-                        Your Library
+                        Liked Songs
                     </p>
                 </div>
                 <AiOutlinePlus onClick={onClick} size={20} className="text-neutral-400 cursor-pointer hover:text-white transition"/>

@@ -61,7 +61,7 @@ const SongItem: React.FC<SongItemProps> = ({
                     className={`text-white font-semibold ${
                         viewMode === 'tile'
                             ? 'text-[15px] md:text-[17px] lg:text-[20px] overflow-hidden max-w-[160px] whitespace-nowrap text-ellipsis'
-                            : 'text-[12px] md:text-[17px] lg:text-[23px] truncate'
+                            : 'text-[12px] md:text-[17px] lg:text-[20px] truncate'
                     }`}
                 >
                     {data.title}
