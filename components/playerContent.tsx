@@ -214,6 +214,23 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, min = 0, m
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [sound,  handleSkipBackward]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code === 'KeyM') {
+                event.preventDefault(); // Prevent default spacebar scroll behavior
+                toggleMute(); // Toggle play/pause
+            }
+        };
+
+        
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [sound,  toggleMute]);
     
 
     return (
