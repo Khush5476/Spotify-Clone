@@ -4,9 +4,7 @@ const nextConfig = {
         domains: [
             "tztpwznenrpoajfsoyfm.supabase.co"
         ]
-    },
-    distDir: '.next'  // Explicitly specify the default output directory
+    }
 };
 
 export default nextConfig;
-

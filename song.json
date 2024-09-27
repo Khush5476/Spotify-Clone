@@ -1,0 +1,17 @@
+[
+    {
+      "id": "song1",
+      "title": "Song One",
+      "author": "Artist One",
+      "url": "https://drive.google.com/uc?export=download&id=FILE_ID_ONE",
+      "imageUrl": "/path/to/song1-image.jpg" 
+    },
+    {
+      "id": "song2",
+      "title": "Song Two",
+      "author": "Artist Two",
+      "url": "https://drive.google.com/uc?export=download&id=FILE_ID_TWO",
+      "imageUrl": "/path/to/song2-image.jpg"
+    }
+  ]
+  
